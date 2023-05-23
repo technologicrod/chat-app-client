@@ -1,0 +1,250 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.backbutton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border: 2px solid grey;
+  background: #2A3244;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.maindiv2 {
+  width: 350px;
+  padding: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: #2A3244;
+  border-radius: 25px;
+  border: 2px solid #0c60a6;
+  color: white;
+  display: block;
+}
+
+.inputclass {
+  color: white;
+  border-radius: 40px;
+  border: solid grey 2px;
+  height: 60px;
+  width: 250px;
+  float: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  background: #2A3244;
+  text-align: center;
+  box-shadow: none
+}
+.inputclass:focus{
+  background: #2A3244;
+  color: white;
+}
+.inputclass2 {
+  color: white;
+  border-radius: 40px;
+  border: solid grey 2px;
+  height: 60px;
+  width: 350px;
+  float: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  background: #2A3244;
+  text-align: center;
+  box-shadow: none
+}
+.inputclass2:focus{
+  background: #2A3244;
+  color: white;
+}
+
+.loginbutton {
+  margin: 20px;
+  border: 2px solid grey;
+  background: #2A3244;
+  color:  white;
+  border-radius: 10px;
+  height: 50px;
+  width: 90px;
+  padding: auto;
+  box-shadow: none;
+  text-align: center;
+}
+
+.createbutton{
+  position: relative;
+  top: 550px;
+  border: 2px solid grey;
+  background: #2A3244;
+  color:  white;
+  border-radius: 10px;
+  height: 50px;
+  width: 190px;
+  padding: auto;
+  box-shadow: none;
+}
+
+.createform {
+  width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  border: 2px solid grey;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.message{
+  margin-top: 10px;
+  height: calc(100vh - 70px);
+  display: flex;
+}
+.chatinput{
+  width: 90%;
+  padding: 10px 0;
+  border: none;
+  color: black;
+  background-color: white;
+  border: 2px solid aqua;
+  border-radius: 3px;
+}
+.chatmenu{
+  flex: 3.5 
+}
+.chatbox{
+  flex: 5.5 
+}
+.chatboxwrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+.chatboxtop{
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 10px;
+}
+.chatboxbottom{
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chatmessageinput{
+  width: 80%;
+  height: 70px;
+  padding: 10px;
+}
+.chatsubmitbutton{
+  width: 70px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.chatonline{
+  flex: 3 
+}
+.chatmenuwrapper, .chatboxwrapper, .chatonlinewrapper {
+  padding: 10px;
+  height: 100%;
+}
+.searchwrapper {
+  display: flex;
+  align-items: center;
+}
+.searchbutton {
+  border-radius: 5px;
+  border: 2px  solid aqua;
+  padding: 10px;
+  background-color: transparent;
+}
+.searchbutton:hover {
+  border: 2px  solid blue;
+  background-color:#2A3244
+}
+.searchbutton:active {
+  border: 2px  solid teal;
+  background-color: darkblue;
+}
+.chatinput {
+  /* Add your desired input styles */
+  margin-right: 10px; /* Adjust spacing between input and button */
+}
+.searchResultsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.searchResultItem {
+  width: 77%;
+  background-color: skyblue;
+  color: black;
+  padding: 10px;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  text-align: left;
+  cursor: pointer;
+}
+.searchResultItem:hover{
+  background-color:cornflowerblue
+}
+.searchResultItem:active{
+  background-color: #0c60a6;
+}
+.noconversation{
+  position: absolute;
+  top: 10%;
+  font-size: 50px;
+  color: grey;
+  cursor: default;
+}
