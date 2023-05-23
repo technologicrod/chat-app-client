@@ -12,7 +12,7 @@ function Login() {
         alert("No inputs")
       }
       else {
-        Axios.post("https://chat-app-server-production-2af1.up.railway.app/auth", {username: username, pass: pass}).then((response)=>{
+        Axios.post("https://chat-app-server-production-63a9.up.railway.app/auth", {username: username, pass: pass}).then((response)=>{
             var rdata = response.data[0].username;
           if (rdata.length > 0){
             alert("Hello, " + rdata)
@@ -27,7 +27,7 @@ function Login() {
   const [userinfo, setuserinfo] = useState("");
   useEffect(() =>{
     async function fetchData(){
-      await Axios.get(`https://chat-app-server-production-2af1.up.railway.app/confirm`).then((response) => {
+      await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/confirm`).then((response) => {
         setuserinfo(response.data);
       })
       }
