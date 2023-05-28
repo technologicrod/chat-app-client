@@ -1,11 +1,22 @@
+import React, { useEffect, useState } from "react";
 import "./messages.css";
 import { format } from "timeago.js";
 
 export default function Messages({ message, uidinfo }) {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup the interval on component unmount
+  }, []);
+
   const timestamp = message.timestamp
     ? {
         _seconds: message.timestamp._seconds,
-        _nanoseconds: message.timestamp._nanoseconds
+        _nanoseconds: message.timestamp._nanoseconds,
       }
     : null;
   const formattedTimestamp = timestamp
