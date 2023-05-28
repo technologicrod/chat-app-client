@@ -35,7 +35,7 @@ function Login() {
   }, [])
   console.log(userinfo)
   const handleLogout = (e) => {
-    Axios.post("http://localhost:8000/logout", {})
+    Axios.post("https://chat-app-server-production-63a9.up.railway.app/logout", {})
     alert("Logged out")
     navigate(generatePath("/", { replace: true }));
     window.location.reload()
@@ -77,8 +77,8 @@ function Login() {
         <div class="headform">
         <h1 class="titleheadform">You are already logged in as {userinfo}.</h1>
         </div>
-        <Link to="/home"><button type="button" class="btn btn-outline-primary">Home</button></Link>
-        <button type="button" class="btn btn-outline-secondary"  onClick={handleLogout}>Log Out</button>
+        <Link to="/home"><button type="button" class="btn btn-outline-primary simplebutton">Home</button></Link>
+        <button type="button" class="btn btn-outline-secondary simplebutton"  onClick={handleLogout}>Log Out</button>
       </div>
     )
   }

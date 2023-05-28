@@ -248,3 +248,7 @@
   color: grey;
   cursor: default;
 }
+
+.simplebutton{
+  margin: 10px;
+}
