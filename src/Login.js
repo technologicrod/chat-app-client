@@ -12,7 +12,7 @@ function Login() {
         alert("No inputs")
       }
       else {
-        Axios.post("http://localhost:8000/auth", {username: username, pass: pass}).then((response)=>{
+        Axios.post("https://chat-app-server-production-63a9.up.railway.app/auth", {username: username, pass: pass}).then((response)=>{
             var rdata = response.data[0].id;
             var rusername = response.data[0].username
             console.log(response.data[0])

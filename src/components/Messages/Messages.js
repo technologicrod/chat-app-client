@@ -12,7 +12,7 @@ export default function Messages({ message, uidinfo }) {
   useEffect(() => {
     const fetchUserProfilePic = async () => {
       try {
-        const response = await Axios.get(`http://localhost:8000/update/${uidinfo}`);
+        const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/update/${uidinfo}`);
         setUserProfilePic(response.data.profilepic);
       } catch (error) {
         console.log('Error fetching user profile picture:', error);
@@ -26,7 +26,7 @@ export default function Messages({ message, uidinfo }) {
     const fetchReceiverProfilePic = async () => {
       try {
         if (uidinfo !== message.senderId) {
-          const response = await Axios.get(`http://localhost:8000/update/${message.senderId}`);
+          const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/update/${message.senderId}`);
           setReceiverProfilePic(response.data.profilepic);
         }
       } catch (error) {

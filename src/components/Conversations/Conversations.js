@@ -10,7 +10,7 @@ export default function Conversations({conversation, currentuser}){
         const friendid = conversation.members.find((m) => m !== currentuser)
         const getuser = async () => {
             try{
-                const res = await axios.get(`http://localhost:8000/update/${friendid}`)
+                const res = await axios.get(`https://chat-app-server-production-63a9.up.railway.app/update/${friendid}`)
                 setuser(res.data.username)
                 setprofpic(res.data.profilepic)
                 console.log("friend data is", res.data.username)

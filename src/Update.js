@@ -23,7 +23,7 @@ function Update() {
 
     useEffect(() => {
         async function fetchData() {
-        await Axios.get(`http://localhost:8000/confirm?loginid=${loginid}`).then((response) => {
+        await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/confirm?loginid=${loginid}`).then((response) => {
             setuserinfo(response.data);
             console.log("confirm", response.data)
         })
@@ -32,7 +32,7 @@ function Update() {
     }, [loginid]);
     useEffect(() => {
         async function fetchData() {
-          const response = await Axios.get(`http://localhost:8000/fetchid?loginid=${loginid}`);
+          const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/fetchid?loginid=${loginid}`);
           setuidinfo(response.data);
           setIsLoading(false);
           console.log("fetchid", response.data)
@@ -42,7 +42,7 @@ function Update() {
       useEffect(() => {
         async function fetchData() {
           if (loginid !== "") {
-            const response = await Axios.get(`http://localhost:8000/update/${loginid}`);
+            const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/update/${loginid}`);
             setallinfo(response.data);
             console.log(response.data)
           }
@@ -98,7 +98,7 @@ function Update() {
             formData.append('email', email)
             formData.append('profilepic', profpic)
             formData.append('userId', loginid)
-            await Axios.put("http://localhost:8000/updateuser", formData);
+            await Axios.put("https://chat-app-server-production-63a9.up.railway.app/updateuser", formData);
             alert("Account updated");
             let rdata = loginid
             rdata && navigate(generatePath("/home/:rdata", { rdata }));

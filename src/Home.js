@@ -18,7 +18,7 @@ function Home() {
   const scrollref = useRef()
   const handleLogout = async (e) => {
     try {
-      const response = await Axios.post("http://localhost:8000/logout", { rdata: loginid });
+      const response = await Axios.post("https://chat-app-server-production-63a9.up.railway.app/logout", { rdata: loginid });
         if (response.status === 200) {
           alert("Logged out");
           navigate(generatePath("/", { replace: true }));
@@ -32,7 +32,7 @@ function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await Axios.get(`http://localhost:8000/check?loginid=${loginid}`);
+        const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/check?loginid=${loginid}`);
         //console.log("check", response.data)
         if (response.data.length > 0){
           setcheckinfo(true)
@@ -47,7 +47,7 @@ function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await Axios.get(`http://localhost:8000/confirm?loginid=${loginid}`);
+        const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/confirm?loginid=${loginid}`);
         setuserinfo(response.data);
         console.log("respooo", response.data)
       } catch (error) {
@@ -64,7 +64,7 @@ function Home() {
   useEffect(() => {
   async function fetchData() {
     try {
-      const response = await Axios.get(`http://localhost:8000/fetchid?loginid=${loginid}`);
+      const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/fetchid?loginid=${loginid}`);
       const fetchedUidInfo = response.data;
       console.log("user id", fetchedUidInfo);
       if (fetchedUidInfo) {
@@ -85,7 +85,7 @@ function Home() {
     async function fetchData() {
       if (isDataFetched && uidinfo) {
         try {
-          const response = await Axios.get(`http://localhost:8000/convo/${uidinfo}`);
+          const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/convo/${uidinfo}`);
           if (response.data.length === 0) {
             console.log('No conversations found for the user');
             // Handle the case when no conversations are found
@@ -109,7 +109,7 @@ function Home() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await Axios.get(`http://localhost:8000/messages/${currentchat.id}`);
+        const res = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/messages/${currentchat.id}`);
         const sortedMessages = res.data.slice().sort((a, b) => {
           const timestampA = a.timestamp._seconds * 1000 + a.timestamp._nanoseconds / 1000000;
           const timestampB = b.timestamp._seconds * 1000 + b.timestamp._nanoseconds / 1000000;
@@ -148,7 +148,7 @@ function Home() {
     };
   
     try {
-      const res = await Axios.post(`http://localhost:8000/send`, message);
+      const res = await Axios.post(`https://chat-app-server-production-63a9.up.railway.app/send`, message);
       console.log("Message sent successfully");
   
       // Get the ID from the response data
@@ -189,7 +189,7 @@ function Home() {
 
   const handleSearch = async () => {
     try {
-      const response = await Axios.get(`http://localhost:8000/search`, {
+      const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/search`, {
         params: {
           username: searchTerm,
         },
@@ -212,7 +212,7 @@ function Home() {
       const newdata = {
         members: [uidinfo, itemId],
       };
-      const res = await Axios.post(`http://localhost:8000/conversations`, newdata);
+      const res = await Axios.post(`https://chat-app-server-production-63a9.up.railway.app/conversations`, newdata);
       console.log("new is", res.data)
       // Add the new conversation data to the convos state
       setconvos(prevConvos => [...prevConvos, res.data]);
