@@ -12,11 +12,13 @@ function Login() {
         alert("No inputs")
       }
       else {
-        Axios.post("https://chat-app-server-production-63a9.up.railway.app/auth", {username: username, pass: pass}).then((response)=>{
-            var rdata = response.data[0].username;
+        Axios.post("http://localhost:8000/auth", {username: username, pass: pass}).then((response)=>{
+            var rdata = response.data[0].id;
+            var rusername = response.data[0].username
+            console.log(response.data[0])
           if (rdata.length > 0){
-            alert("Hello, " + rdata)
-            navigate(generatePath("/home", {}));
+            alert("Hello, " + rusername)
+            rdata && navigate(generatePath("/home/:rdata", { rdata }));
           }
           else {
             alert("Unknown inputted account.")
@@ -25,21 +27,15 @@ function Login() {
       }
   }
   const [userinfo, setuserinfo] = useState("");
-  useEffect(() =>{
+  /*useEffect(() =>{
     async function fetchData(){
-      await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/confirm`).then((response) => {
+      await Axios.get(`http://localhost:8000/confirm`).then((response) => {
         setuserinfo(response.data);
       })
       }
   fetchData()
   }, [])
-  console.log(userinfo)
-  const handleLogout = (e) => {
-    Axios.post("https://chat-app-server-production-63a9.up.railway.app/logout", {})
-    alert("Logged out")
-    navigate(generatePath("/", { replace: true }));
-    window.location.reload()
-  };
+  console.log(userinfo)*/
   if (userinfo.length <= 0 || userinfo == undefined){
     return (
       <div className="App">
@@ -77,8 +73,7 @@ function Login() {
         <div class="headform">
         <h1 class="titleheadform">You are already logged in as {userinfo}.</h1>
         </div>
-        <Link to="/home"><button type="button" class="btn btn-outline-primary simplebutton">Home</button></Link>
-        <button type="button" class="btn btn-outline-secondary simplebutton"  onClick={handleLogout}>Log Out</button>
+        <Link to="/home"><button type="button" class="btn btn-outline-primary">Home</button></Link>
       </div>
     )
   }

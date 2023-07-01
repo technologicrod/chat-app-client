@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Axios from 'axios';
-import { Link, useNavigate, generatePath } from 'react-router-dom';
+import { Link, useNavigate, useParams, generatePath } from 'react-router-dom';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
@@ -10,50 +10,82 @@ import Messages from './components/Messages/Messages';
 import Onlines from './components/Onlines/Onlines';
 
 function Home() {
+  const { rdata } = useParams();
+  const loginid = rdata;
+  console.log("login", loginid)
   const [username, setusername] = useState("");
   const navigate = useNavigate();
   const scrollref = useRef()
-  const handleLogout = (e) => {
-    Axios.post("https://chat-app-server-production-63a9.up.railway.app/logout", {})
-    alert("Logged out")
-    navigate(generatePath("/", { replace: true }));
-    window.location.reload()
+  const handleLogout = async (e) => {
+    try {
+      const response = await Axios.post("http://localhost:8000/logout", { rdata: loginid });
+        if (response.status === 200) {
+          alert("Logged out");
+          navigate(generatePath("/", { replace: true }));
+          //window.location.reload();
+        }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const [userinfo, setuserinfo] = useState("");
+  const [checkinfo, setcheckinfo] = useState(false);
   useEffect(() => {
     async function fetchData() {
-      await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/confirm`).then((response) => {
-        setuserinfo(response.data);
-      })
+      try {
+        const response = await Axios.get(`http://localhost:8000/check?loginid=${loginid}`);
+        //console.log("check", response.data)
+        if (response.data.length > 0){
+          setcheckinfo(true)
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
     }
     fetchData();
-  }, []);
+  }, [loginid]);
+  const [userinfo, setuserinfo] = useState(null);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await Axios.get(`http://localhost:8000/confirm?loginid=${loginid}`);
+        setuserinfo(response.data);
+        console.log("respooo", response.data)
+      } catch (error) {
+        console.log('Error:', error);
+      }
+    }
+    fetchData();
+  }, [loginid]);
 
   const [uidinfo, setuidinfo] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDataFetched, setIsDataFetched] = useState(false);
+  const [profpic, setprofpic] = useState()
   useEffect(() => {
-    async function fetchData() {
-      const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/fetchid`);
+  async function fetchData() {
+    try {
+      const response = await Axios.get(`http://localhost:8000/fetchid?loginid=${loginid}`);
       const fetchedUidInfo = response.data;
       console.log("user id", fetchedUidInfo);
-      if (fetchedUidInfo && fetchedUidInfo.length > 0) {
-        setuidinfo(fetchedUidInfo);
+      if (fetchedUidInfo) {
+        setuidinfo(fetchedUidInfo.id);
         setIsDataFetched(true); // Mark data as fetched
-        console.log("real", fetchedUidInfo[0]);
+        setprofpic(fetchedUidInfo.profilepic)
+        console.log("real", fetchedUidInfo.id);
       }
       setIsLoading(false);
+    } catch (error) {
+      console.log('Error:', error);
     }
-  
-    fetchData();
-  }, []);
+  }
+  fetchData();
+}, [loginid]);
   const [convos, setconvos] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      if (isDataFetched && uidinfo && uidinfo.length > 0) {
+      if (isDataFetched && uidinfo) {
         try {
-          const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/convo/${uidinfo[0]}`);
+          const response = await Axios.get(`http://localhost:8000/convo/${uidinfo}`);
           if (response.data.length === 0) {
             console.log('No conversations found for the user');
             // Handle the case when no conversations are found
@@ -77,7 +109,7 @@ function Home() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/messages/${currentchat.id}`);
+        const res = await Axios.get(`http://localhost:8000/messages/${currentchat.id}`);
         const sortedMessages = res.data.slice().sort((a, b) => {
           const timestampA = a.timestamp._seconds * 1000 + a.timestamp._nanoseconds / 1000000;
           const timestampB = b.timestamp._seconds * 1000 + b.timestamp._nanoseconds / 1000000;
@@ -98,7 +130,7 @@ function Home() {
   const [newmessage, setnewmessage] = useState("")
   const handlesubmit = async (e) => {
     e.preventDefault();
-    const secondMember = currentchat.members.find((member) => member !== uidinfo[0]);
+    const secondMember = currentchat.members.find((member) => member !== uidinfo);
     setOtherUser(secondMember);
     console.log("second is", secondMember);
   
@@ -108,7 +140,7 @@ function Home() {
     };
   
     const message = {
-      senderId: uidinfo[0],
+      senderId: uidinfo,
       content: newmessage,
       conversationid: currentchat.id,
       receiverId: secondMember,
@@ -116,7 +148,7 @@ function Home() {
     };
   
     try {
-      const res = await Axios.post(`https://chat-app-server-production-63a9.up.railway.app/send`, message);
+      const res = await Axios.post(`http://localhost:8000/send`, message);
       console.log("Message sent successfully");
   
       // Get the ID from the response data
@@ -144,8 +176,8 @@ function Home() {
   
   const update = (e) => {
     if (uidinfo) {
-      const path = generatePath("/update/:uidinfo", { uidinfo });
-      navigate(path);
+      let rdata = uidinfo
+      rdata && navigate(generatePath("/update/:rdata", { rdata }));
     }
   };
   const [searchTerm, setSearchTerm] = useState('');
@@ -157,7 +189,7 @@ function Home() {
 
   const handleSearch = async () => {
     try {
-      const response = await Axios.get(`https://chat-app-server-production-63a9.up.railway.app/search`, {
+      const response = await Axios.get(`http://localhost:8000/search`, {
         params: {
           username: searchTerm,
         },
@@ -178,9 +210,9 @@ function Home() {
     
     try {
       const newdata = {
-        members: [uidinfo[0], itemId],
+        members: [uidinfo, itemId],
       };
-      const res = await Axios.post(`https://chat-app-server-production-63a9.up.railway.app/conversations`, newdata);
+      const res = await Axios.post(`http://localhost:8000/conversations`, newdata);
       console.log("new is", res.data)
       // Add the new conversation data to the convos state
       setconvos(prevConvos => [...prevConvos, res.data]);
@@ -207,74 +239,88 @@ function Home() {
     }
   }, [isLoading, uidinfo, navigate]);
 
-  if (isLoading) {
+  if (isLoading){
     return <div>Loading...</div>;
   }
-  return (
-    <div className="App">
-      <Link to="/"><button type="button" class="btn btn-primary backbutton" onClick={handleLogout}>Log Out</button></Link>
-      <main class="container-fluid">
-        <h1>Hello {userinfo}</h1>
-        <button type="button" class="btn btn-outline-info" onClick={update}>Edit Profile</button>
-        <div class="message">
-        <div className='chatmenu'>
-          <div className='chatmenuwrapper'>
-              <div className='searchwrapper'>
-                  <input
-                type="text"
-                placeholder="Search friends"
-                className="chatinput"
-                value={searchTerm}
-                onChange={handleInputChange}
-              />
-              <button onClick={handleSearch} className='searchbutton'>Search</button>
-              </div>
-              <ul className="searchResultsList">
-                {searchResults.map((result) => (
-                  <li
-                    key={result.id}
-                    className="searchResultItem"
-                    onClick={() => handleItemClick(result.id)}
-                  >
-                    {result.username}
-                  </li>
-                ))}
-              </ul>
-              {convos.map((c)=> (
-                <div onClick={()=>setcurrentchat(c)}>
-                  <Conversations conversation={c} currentuser={uidinfo[0]}/>
+  else{
+    if (checkinfo === false) {
+      return (
+        <div class="App">
+          <div class="headform">
+          <h1 class="titleheadform">You must log in first.</h1>
+          </div>
+          <Link to="/"><button type="button" class="btn btn-outline-primary">Log In</button></Link>
+        </div>
+        )
+    }
+    return (
+      <div className="App">
+        <Link to="/"><button type="button" class="btn btn-primary backbutton" onClick={handleLogout}>Log Out</button></Link>
+        <main class="container-fluid">
+          <h1>Hello {userinfo}</h1>
+          <img className="profpic" alt="Profile Pic" src={`data:image/jpeg;base64,${profpic}`}/>
+  
+          <button type="button" class="btn btn-outline-info" onClick={update}>Edit Profile</button>
+          <div class="message">
+          <div className='chatmenu'>
+            <div className='chatmenuwrapper'>
+                <div className='searchwrapper'>
+                    <input
+                  type="text"
+                  placeholder="Search friends"
+                  className="chatinput"
+                  value={searchTerm}
+                  onChange={handleInputChange}
+                />
+                <button onClick={handleSearch} className='searchbutton'>Search</button>
                 </div>
-            ))}
-          </div>
-        </div>
-        <div className='chatbox'>
-          <div className='chatboxwrapper'>
-            {
-              currentchat ?
-              <>
-            <div className='chatboxtop'>
-            {messages && messages.map((m) => (
-              <div ref={scrollref} key={m.id}>
-                <Messages message={m} uidinfo={uidinfo} />
-              </div>
-            ))}
-
+                <ul className="searchResultsList">
+                  {searchResults.map((result) => (
+                    <li
+                      key={result.id}
+                      className="searchResultItem"
+                      onClick={() => handleItemClick(result.id)}
+                    >
+                      {result.username}
+                    </li>
+                  ))}
+                </ul>
+                {convos.map((c)=> (
+                  <div onClick={()=>setcurrentchat(c)}>
+                    <Conversations conversation={c} currentuser={uidinfo}/>
+                  </div>
+              ))}
             </div>
-            <div className='chatboxbottom'>
-              <textarea className='chatmessageinput' placeholder='Write something' onChange={(e)=>setnewmessage(e.target.value)} value={newmessage}></textarea>
-              <button className='chatsubmitbutton' onClick={handlesubmit}>Send</button>
-            </div></>: <span className='noconversation'>Open a message to chat.</span>}
           </div>
-        </div>
-        <div className='chatonline'>
-          <div className='chatonlinewrapper'>
-            <Onlines/>
+          <div className='chatbox'>
+            <div className='chatboxwrapper'>
+              {
+                currentchat ?
+                <>
+              <div className='chatboxtop'>
+              {messages && messages.map((m) => (
+                <div ref={scrollref} key={m.id}>
+                  <Messages message={m} uidinfo={uidinfo} />
+                </div>
+              ))}
+  
+              </div>
+              <div className='chatboxbottom'>
+                <textarea className='chatmessageinput' placeholder='Write something' onChange={(e)=>setnewmessage(e.target.value)} value={newmessage}></textarea>
+                <button className='chatsubmitbutton' onClick={handlesubmit}>Send</button>
+              </div></>: <span className='noconversation'>Open a message to chat.</span>}
+            </div>
           </div>
-        </div>
-        </div>
-      </main>
-    </div>
-  );
+          <div className='chatonline'>
+            <div className='chatonlinewrapper'>
+              <Onlines/>
+            </div>
+          </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 }
 
 export default Home;

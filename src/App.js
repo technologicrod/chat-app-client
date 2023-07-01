@@ -24,8 +24,8 @@ function App() {
         <Routes>
         <Route exact path="/" element={<Login />} />
         <Route exact path="/create" element={<Create />} />
-        <Route exact path="/home" element={<Home />} />
-        <Route path="/update/:userid" element={<Update />} />
+        <Route path="/home/:rdata" element={<Home />} />
+        <Route path="/update/:rdata" element={<Update />} />
         </Routes>
       </div>
     </Router>
