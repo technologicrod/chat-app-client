@@ -26,7 +26,7 @@ function Create() {
             } 
         else {
           try {
-            await Axios.post("http://localhost:8000/adduser", { username: username, password: password, email: email });
+            await Axios.post("https://chat-app-server-production-63a9.up.railway.app/adduser", { username: username, password: password, email: email });
             alert("Account registered");
             navigate('/', { replace: true });
             window.location.reload();
